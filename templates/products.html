@@ -1,0 +1,273 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Products{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="text-center my-4 product-title">Available Products</h2>
+
+    <!-- Search Bar and Speak Button Container -->
+    <div class="search-speak-container text-center mb-4">
+        <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="searchInput" class="search-bar" placeholder="Search for a product...">
+        </div>
+        <button onclick="startListening()" class="chatbot-btn">🎤</button>
+    </div>
+
+    <!-- View Cart Button (Fixed Below Navbar) -->
+    <div class="fixed-cart-button">
+        <a href="{% url 'view_cart' %}" class="btn btn-grey">
+            🛒 View Cart (<span id="cart-count">{{ cart_count }}</span>)
+        </a>
+    </div>
+
+    <div class="row" id="productContainer">
+        {% for product in products %}
+            <div class="col-md-3 mb-4 product-card-container" data-name="{{ product.name|lower }}">
+                <div class="card h-100 product-card">
+                    <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="card-text">Price: ₹{{ product.price }}</p>
+                        {% if product.stock > 0 %}
+                        <p class="card-text text-success">In stock: {{ product.stock }}</p>
+                        <form method="POST" action="{% url 'add_to_cart' product.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-grey">Add to Cart</button>
+                        </form>
+                    {% else %}
+                        <p class="card-text text-danger">Out of stock</p>
+                        <button class="btn btn-secondary" disabled>Out of Stock</button>
+                    {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p class="text-center" id="noProducts">No products available.</p>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- JavaScript for Search and Chatbot Functionality -->
+<script>
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+        let filter = this.value.toLowerCase();
+        let products = document.querySelectorAll('.product-card-container');
+        let hasResults = false;
+
+        products.forEach(function(product) {
+            let name = product.getAttribute('data-name');
+            if (name.includes(filter)) {
+                product.style.display = 'block';
+                hasResults = true;
+            } else {
+                product.style.display = 'none';
+            }
+        });
+
+        document.getElementById('noProducts').style.display = hasResults ? 'none' : 'block';
+    });
+
+    // Chatbot Speech Recognition
+    window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+
+    function startListening() {
+        recognition.start();
+    }
+
+    recognition.addEventListener('result', function(event) {
+        const speech = event.results[0][0].transcript.toLowerCase();
+        document.getElementById('searchInput').value = speech;
+        document.getElementById('searchInput').dispatchEvent(new Event('keyup'));
+    });
+</script>
+
+<!-- CSS for Styling -->
+<style>
+    /* Body and General Styling */
+    body {
+    font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-image: url("{% static '/assets/image/pet_bg6.png' %}");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+    }
+
+    /* Search Bar and Speak Button Container */
+    .search-speak-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .search-box {
+        display: flex;
+        align-items: center;
+        position: relative;
+        width: 60%;
+        padding: 5px;
+        border: 2px solid #5f2b8e;
+        border-radius: 5px;
+        background-color: #fff;
+    }
+
+    .search-bar {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        font-size: 1rem;
+        outline: none;
+        color: #444;
+    }
+
+    .search-icon {
+        margin-right: 10px;
+        font-size: 1.2rem;
+        color: #5f2b8e;
+    }
+
+    /* Title Styling */
+    .product-title {
+        color: #5f2b8e;
+        font-size: 2.6rem;
+        font-weight: 700;
+        margin-bottom: 25px;
+        text-align: center;
+        letter-spacing: 0.5px;
+        text-shadow: 1px 1px 2px rgba(95, 43, 142, 0.15);
+    }
+
+    /* Fixed Cart Button */
+    .fixed-cart-button {
+        position: fixed;
+        top: 70px;
+        right: 20px;
+        z-index: 1000;
+        background: #fff;
+        padding: 10px 15px;
+        border-radius: 8px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Speak Button */
+    .chatbot-btn {
+        background-color: #5f2b8e;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 1rem;
+        border-radius: 50px;
+        cursor: pointer;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .chatbot-btn:hover {
+        background-color: #7a3fa4;
+    }
+
+    .btn {
+        border: none;
+        padding: 12px 24px;
+        font-size: 1rem;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        background-color: #b0b0b0;
+        color: #fff;
+        font-weight: 500;
+    }
+
+    .btn:hover {
+        opacity: 0.9;
+        transform: translateY(-2px);
+        background-color: #c8c8c8;
+    }
+
+    .btn-grey {
+        background-color: #5f2b8e;
+        color: #fff;
+        font-weight: bold;
+    }
+
+    .btn-grey:hover {
+        background-color: #7a3fa4;
+    }
+
+    .product-card {
+        border: none;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        transition: box-shadow 0.3s ease, transform 0.3s ease;
+        height: 500px;
+    }
+
+    .product-card:hover {
+        box-shadow: 0px 8px 20px rgba(95, 43, 142, 0.25);
+        transform: translateY(-5px);
+    }
+
+    .card-img-top {
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+        object-fit: cover;
+        height: 180px;
+    }
+
+    .card-body {
+        padding: 15px;
+        background-color: #fdfdfd;
+    }
+
+    .card-title {
+        color: #472b7a;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+
+    .card-text {
+        color: #555;
+        font-size: 0.95rem;
+        margin-bottom: 15px;
+    }
+
+    /* Empty State */
+    .text-center {
+        color: #999;
+        font-size: 1.2rem;
+    }
+
+    @media screen and (max-width: 768px) {
+        .product-title {
+            font-size: 2rem;
+        }
+
+        .card-title {
+            font-size: 1rem;
+        }
+
+        .card-text, .search-bar {
+            font-size: 0.9rem;
+        }
+    }
+</style>
+{% endblock %}

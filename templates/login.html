@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="signup-container">
+    <div class="signup-box">
+        <h3 class="signup-title">Login</h3>
+
+        <!-- Display Django Messages -->
+        {% if messages %}
+            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- Login Form -->
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" name="username" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" name="password" class="form-control" required>
+            </div>
+
+            <button type="submit" class="btn-signup">Login</button>
+        </form>
+
+        <p class="login-link">
+            Don't have an account? <a href="{% url 'signup' %}">Sign up</a>
+        </p>
+    </div>
+</div>
+
+<!-- CSS Styling -->
+<style>
+    body {
+        background: url("{% static 'assets/image/pet_paw.png' %}") no-repeat center center/cover;
+        margin: 0;
+        padding: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        overflow-x: hidden;
+    }
+
+    .signup-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 20px;
+    }
+
+    .signup-box {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        padding: 35px;
+        width: 100%;
+        max-width: 400px;
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        animation: bounceIn 1s ease;
+    }
+
+    .pet-card {
+        border: 3px solid #ffbc70;
+        position: relative;
+    }
+
+    .card-top {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 25px;
+    }
+
+    .pet-avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        border: 3px solid #6A0DAD;
+        background-color: #fff;
+        object-fit: cover;
+        margin-bottom: 10px;
+    }
+
+    .signup-title {
+        color: #6A0DAD;
+        text-align: center;
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+    .form-group {
+        margin-bottom: 18px;
+    }
+
+    .form-label {
+        display: block;
+        font-weight: 500;
+        margin-bottom: 6px;
+        color: #333;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 12px;
+        border-radius: 10px;
+        border: 1.5px solid #ccc;
+        font-size: 15px;
+        transition: 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: #6A0DAD;
+        box-shadow: 0 0 6px rgba(106, 13, 173, 0.3);
+        outline: none;
+    }
+
+    .btn-signup {
+        background-color: #6A0DAD;
+        color: white;
+        padding: 12px;
+        width: 100%;
+        border: none;
+        border-radius: 10px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-signup:hover {
+        background-color: #550a8a;
+    }
+
+    .login-link {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .login-link a {
+        color: #6A0DAD;
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .login-link a:hover {
+        text-decoration: underline;
+    }
+
+    @keyframes bounceIn {
+        0% {
+            opacity: 0;
+            transform: scale(0.9) translateY(20px);
+        }
+        100% {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+    }
+
+    @media (max-width: 480px) {
+        .signup-box {
+            padding: 25px;
+        }
+
+        .signup-title {
+            font-size: 20px;
+        }
+
+        .pet-avatar {
+            width: 60px;
+            height: 60px;
+        }
+    }
+</style>
+{% endblock %}
+
+

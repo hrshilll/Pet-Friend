@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container">
+    <h2 class="text-center my-4 product-title">Our Services</h2>
+
+    <div class="fixed-cart-button">
+        <a href="{% url 'view_cart' %}" class="btn btn-grey">
+            🛒 View Cart (<span id="cart-count">{{ cart_count }}</span>)
+        </a>
+    </div>
+
+    <div class="row">
+        {% for service in services %}
+        <div class="col-md-4 mb-4 product-card-container">
+            <div class="card h-100 product-card">
+                <img src="{{ service.image.url }}" class="card-img-top" alt="{{ service.name }}">
+                <div class="card-body text-center">
+                    <h5 class="card-title">{{ service.name }}</h5>
+                    <p class="card-text">Price: ₹{{ service.price }}</p>
+                    <p class="card-text">Category: {{ service.category }}</p>
+
+                    <form method="POST" action="{% url 'add_service_to_cart_with_slot' service.id %}">
+                        {% csrf_token %}
+                        <div class="form-group mb-2">
+                            <select name="preferred_slot" class="form-select" required>
+                                <option value="">Select Slot</option>
+                                {% for slot, display in service.SLOT_CHOICES %}
+                                <option value="{{ slot }}">{{ display }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-purple btn-sm mt-2">Book This Slot</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-center">No services available.</p>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- CSS Styling (same as products.html) -->
+<style>
+    body {
+        font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-image: url("{% static '/assets/image/pet_bg5.png' %}");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 30px auto;
+        padding: 30px;
+        background-color: #fff;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    }
+
+    .product-title, h2 {
+        color: #6b28b7; /* More vibrant purple */
+        font-size: 2.8rem;
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 30px;
+        letter-spacing: 0.7px;
+        text-shadow: 1px 1px 2px rgba(107, 40, 183, 0.15);
+    }
+
+    .fixed-cart-button {
+        position: fixed;
+        top: 70px;
+        right: 20px;
+        z-index: 1000;
+        background: #fff;
+        padding: 10px 18px;
+        border-radius: 10px;
+        box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn {
+        border: none;
+        padding: 12px 26px;
+        font-size: 1.05rem;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        font-weight: 500;
+    }
+
+    .btn:hover {
+        opacity: 0.95;
+        transform: translateY(-2px);
+    }
+
+    .btn-grey,
+    .btn-purple {
+        background-color: #6b28b7;
+        color: #fff;
+        font-weight: 600;
+    }
+
+    .btn-grey:hover,
+    .btn-purple:hover {
+        background-color: #8542d3;
+    }
+
+    .card.service-card {
+        border: none;
+        background-color: #fff;
+        border-radius: 12px;
+        box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.08);
+        transition: box-shadow 0.3s ease, transform 0.3s ease;
+        margin-bottom: 30px;
+    }
+
+    .card.service-card:hover {
+        box-shadow: 0px 12px 25px rgba(107, 40, 183, 0.2);
+        transform: translateY(-6px);
+    }
+
+    .card-img-top {
+        border-top-left-radius: 12px;
+        border-top-right-radius: 12px;
+        object-fit: cover;
+        height: 200px;
+    }
+
+    .card-body {
+        padding: 20px;
+        background-color: #fdfdfd;
+    }
+
+    .card-title {
+        color: #4b188c; /* Deep royal purple */
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    .card-text {
+        color: #444;
+        font-size: 1.05rem;
+        margin-bottom: 12px;
+    }
+
+    .card-text strong {
+        color: #6a1ca2; /* Accent purple */
+    }
+
+    .form-group select.form-select {
+        font-size: 1rem;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        color: #3f3f3f;
+    }
+
+    .text-center {
+        color: #666;
+        font-size: 1.15rem;
+    }
+
+    @media screen and (max-width: 768px) {
+        .container {
+            padding: 15px;
+        }
+        .card-title {
+            font-size: 1.1rem;
+        }
+        .card-text, .form-group select {
+            font-size: 0.95rem;
+        }
+    }
+</style>
+{% endblock %}

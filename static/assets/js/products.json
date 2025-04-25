@@ -1,0 +1,123 @@
+[
+    {
+        "id": 1,
+        "name":" Dog Bed",
+        "price": 1200,
+        "image": "image/1.png"
+    },
+    {
+        "id": 2,
+        "name":" Cat Bed",
+        "price": 900,
+        "image": "image/2.png"
+    },
+    {
+        "id": 3,
+        "name": "Pet Food  \n(Dry Dog Food, 5 KG)",
+        "price": 1500,
+        "image": "image/3.png"
+    },
+    {
+        "id": 4,
+        "name": "Pet Food \n(Wet Cat Food, 3 KG)",
+        "price": 1200,
+        "image": "image/4.png"
+    },
+    {
+        "id": 5,
+        "name": "Pet Shampoo \n(Anti Tick & Flea, 500 ML)",
+        "price": 500,
+        "image": "image/5.png"
+    },
+    {
+        "id": 6,
+        "name": "Pet Grooming Kit \n(Brush, Nail Clipper & Scissors)",
+        "price": 800,
+        "image": "image/6.png"
+    },
+    {
+        "id": 7,
+        "name": "Pet Collar & Leash Set \n(Adjustable & Reflective)",
+        "price": 700,
+        "image": "image/7.png"
+    },
+    {
+        "id": 8,
+        "name": "Dog Toys \n(Rubber Bone, Pack of Two)",
+        "price": 400,
+        "image": "image/8.png"
+    },
+    {
+        "id": 9,
+        "name": "Cat Scratching Post",
+        "price": 1300,
+        "image": "image/9.png"
+    },
+    {
+        "id": 10,
+        "name":"Travel Carrier \n(Small & Medium Size)",
+        "price": 2000,
+        "image": "image/10.png"
+    },
+    {
+        "id": 11,
+        "name":"Aquarium Starter Kit \n(Tank, Filter, Light, Decoration)",
+        "price": 3500,
+        "image": "image/11.png"
+    },
+    {
+        "id": 12,
+        "name": "Birdcage With Perch & Feeding Bowls",
+        "price": 2800,
+        "image": "image/12.png"
+    },
+    {
+        "id": 13,
+        "name":"Pet Training Pad \n(Pack of 50, Absorbent)",
+        "price": 900,
+        "image": "image/13.png"
+    },
+    {
+        "id": 14,
+        "name":" Small Animal Bedding \n(For Rabbits, Guinea Pigs)",
+        "price": 600,
+        "image": "image/14.png"
+    },
+    {
+        "id": 15,
+        "name":" Pet Water & Food Dispenser \n(Automatic)",
+        "price": 1100,
+        "image": "image/15.png"
+    },
+    {
+        "id": 16,
+        "name":" Reptile Heat Lamp \n(For Turtles, Lizards, Snakes)",
+        "price": 1500,
+        "image": "image/16.png"
+    },
+    {
+        "id": 17,
+        "name":"Hamster Exercise Wheel & Tunnel Set",
+        "price": 1000,
+        "image": "image/17.png"
+    },
+    {
+        "id": 18,
+        "name":" Pet First Aid Kit \n(Bandages, Tweezers, Antiseptic, etc.)",
+        "price": 1200,
+        "image": "image/18.png"
+    },
+    {
+        "id": 19,
+        "name":" Parrot Food \n(Veg, 480 GM)",
+        "price": 780,
+        "image": "image/19.png"
+},
+{
+        "id": 20,
+        "name":" Tortoise Food \n(Non-veg, 500 GM)",
+        "price": 1200,
+        "image": "image/20.png"
+}
+
+]

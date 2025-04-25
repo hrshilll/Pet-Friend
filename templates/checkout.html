@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+{% block title %}Checkout{% endblock %}
+
+{% block content %}
+<style>
+    /* Body and General Styles */
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #5f2b8e; /* Solid Purple Background */
+        color: #333;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff; /* White Content Area */
+        border-radius: 10px; /* Optional: adds rounded corners to content */
+    }
+
+    h2 {
+        color: #5f2b8e; /* Purple Color */
+        font-size: 2rem;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    p {
+        font-size: 1.1rem;
+        text-align: center;
+        margin-bottom: 30px;
+        color: #666;
+    }
+
+    .btn {
+        border: none;
+        padding: 12px 24px;
+        font-size: 1rem;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+        opacity: 0.9;
+    }
+
+    /* Razorpay Button - Purple and Bold Font */
+    .btn-grey {
+        background-color: #5f2b8e; /* Purple Color */
+        color: #fff;
+        font-weight: bold; /* Bold Font */
+    }
+
+    .btn-grey:hover {
+        background-color: #7a3fa4; /* Lighter Purple on Hover */
+    }
+
+    /* Modal Styles */
+    .modal-content {
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Updated Modal Header for Purple Theme */
+    .modal-header {
+        background-color: #5f2b8e; /* Purple background */
+        border-bottom: 1px solid #ddd;
+        color: #fff; /* White text */
+        padding: 15px;
+    }
+
+    .modal-title {
+        font-size: 1.5rem;
+        margin: 0;
+    }
+
+    /* Modal Body */
+    .modal-body {
+        padding: 20px;
+        color: #555;
+    }
+
+    /* Updated Modal Footer for Purple Theme */
+    .modal-footer {
+        background-color: #5f2b8e; /* Purple footer background */
+        border-top: 1px solid #ddd;
+        padding: 15px;
+        text-align: center;
+    }
+
+    .modal-footer a {
+        text-decoration: none;
+        background-color: #fff;
+        color: #5f2b8e;
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-weight: bold;
+    }
+
+    .modal-footer a:hover {
+        background-color: #7a3fa4; /* Lighter purple when hovering */
+    }
+
+    /* Input Fields */
+    input, select, textarea {
+        border: 1px solid #ccc;
+        padding: 10px;
+        border-radius: 5px;
+        width: 100%;
+        margin-bottom: 15px;
+        font-size: 1rem;
+        color: #333;
+    }
+
+    input:focus, select:focus, textarea:focus {
+        outline: none;
+        border-color: #666;
+    }
+
+    /* Footer */
+    footer {
+        text-align: center;
+        padding: 15px;
+        font-size: 0.9rem;
+        background-color: #333;
+        color: #fff;
+    }
+
+    /* View Cart Button (Fixed Below Navbar) */
+    .fixed-cart-button {
+        position: fixed;
+        top: 70px; /* Adjust based on navbar height */
+        right: 20px;
+        z-index: 1000;
+        background: #fff;
+        padding: 10px 15px;
+        border-radius: 8px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+
+
+<div class="container">
+    <h2 class="text-center my-4">Checkout</h2>
+    <p class="text-center">Total Amount: ₹{{ total_price }}</p>
+
+    <!-- Razorpay Button -->
+    <div class="text-center">
+        <button id="pay-button" class="btn btn-grey btn-lg">🛍 Pay with Razorpay</button>
+    </div>
+
+    <!-- Payment Success Modal -->
+    <div id="payment-success-modal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Payment Successful!</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Thank you for your payment. Your payment ID is: <strong id="payment-id"></strong>.</p>
+                    <p>What would you like to do next?</p>
+                </div>
+                <div class="modal-footer">
+                    <a href="{% url 'index' %}" class="btn btn-primary">Go to Home</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    document.getElementById('pay-button').addEventListener('click', function() {
+        var options = {
+            "key": "{{ razorpay_key }}", // Razorpay Key
+            "amount": "{{ total_price }}" * 100, // Amount in paise
+            "currency": "INR",
+            "name": "Your Store Name",
+            "description": "Order Payment",
+            "order_id": "{{ razorpay_order_id }}", // Razorpay Order ID
+            "handler": function(response) {
+                // Display payment ID in the modal
+                document.getElementById('payment-id').textContent = response.razorpay_payment_id;
+
+                // Show the payment success modal
+                $('#payment-success-modal').modal('show');
+            },
+            "prefill": {
+                "name": "Customer Name",
+                "email": "customer@example.com",
+                "contact": "9999999999"
+            },
+            "theme": {
+                "color": "#5f2b8e" /* Purple Color */
+            }
+        };
+        var rzp1 = new Razorpay(options);
+        rzp1.open();
+    });
+</script>
+
+{% endblock %}
