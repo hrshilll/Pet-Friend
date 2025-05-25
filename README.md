@@ -67,9 +67,7 @@ python manage.py runserver
 ## 🙋‍♂️ Developer
 
 **Harshil Chauhan**  
-📧 harshilworks082@gmail.com  
-📱 +91 6354731425  
-🎓 BCA – Chimanbhai Institute of Computer Applications, Gujarat University
+📧 harshilworks082@gmail.com    
 
 ## 🤝 Contributions
 
